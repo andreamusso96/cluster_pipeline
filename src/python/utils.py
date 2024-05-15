@@ -33,7 +33,6 @@ def run_sql_script_on_db(db: DB):
                 execute_sql_file(conn=conn,
                                  file_path=sql_file_path,
                                  params=params)
-            conn.close()
 
         return wrapper_sql_script_on_db
     return decorator_run_sql_script_on_db

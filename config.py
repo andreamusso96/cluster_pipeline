@@ -25,9 +25,19 @@ class PathManager:
                 self.transform = f"{self.sql_file_folder}/transform.sql"
                 self.load = f"{self.sql_file_folder}/load.sql"
 
+        class IpumsTimeConsistentCluster:
+            def __init__(self, sql_file_folder: str):
+                self.sql_file_folder = sql_file_folder
+                self.create_function__template_usa_raster = f"{self.sql_file_folder}/create_function__template_usa_raster.sql"
+                self.create_cluster = f"{self.sql_file_folder}/create_cluster.sql"
+                self.rasterize_census_places = f"{self.sql_file_folder}/create_table__rasterized_census_places.sql"
+                self.create_cluster_intersection_matching = f"{self.sql_file_folder}/create_table__cluster_intersection_matching.sql"
+                self.create_time_consistent_cluster = f"{self.sql_file_folder}/create_time_consistent_cluster.sql"
+
         def __init__(self, sql_file_folder: str):
             self.sql_file_folder = sql_file_folder
             self.ipums_etl = self.IpumsETL(sql_file_folder=f'{self.sql_file_folder}/ipums_etl')
+            self.ipums_tcc = self.IpumsTimeConsistentCluster(sql_file_folder=f'{self.sql_file_folder}/ipums_time_consistent_cluster')
 
     def __init__(self, project_path: str = _project_path, data_folder: str = _data_folder, docker_data_folder: str = _docker_data_folder):
         self.project_path = project_path
@@ -44,6 +54,16 @@ class DatabaseInfoManager:
             self.geo = "geo_{year}"
             self.census = "census_{year}"
             self.census_place_industry_count = "census_place_industry_count_{year}"
+            self.cluster = "cluster_{year}"
+            self.cluster_industry = "cluster_industry_{year}"
+            self.rasterized_census_places = "rasterized_census_places_{year}"
+            self.convolved_census_place_raster = "convolved_census_place_raster_{year}"
+            self.multiyear_cluster = "multiyear_cluster"
+            self.multiyear_cluster_industry = "multiyear_cluster_industry"
+            self.cluster_intersection_matching = "cluster_intersection_matching"
+            self.crosswalk_cluster_uid_to_cluster_id = "crosswalk_cluster_uid_to_cluster_id"
+            self.time_consistent_cluster = "time_consistent_cluster"
+            self.time_consistent_cluster_industry = "time_consistent_cluster_industry"
 
     def __init__(self, data_folder: str = _data_folder):
         self.temp_duckdb = f"duckdb:///{data_folder}/tmp/temp.db"
@@ -54,6 +74,11 @@ class DatabaseInfoManager:
 class ParameterManager:
     def __init__(self):
         self.years = [1850, 1860]
+        self.dbscan_eps = 100
+        self.dbscan_min_points = 1
+        self.pixel_threshold = 100
+        self.convolution_kernel_size = 11
+        self.convolution_kernel_decay_rate = 0.2
 
 
 class Config:
