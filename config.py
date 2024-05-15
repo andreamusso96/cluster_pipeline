@@ -66,14 +66,14 @@ class DatabaseInfoManager:
             self.time_consistent_cluster_industry = "time_consistent_cluster_industry"
 
     def __init__(self, data_folder: str = _data_folder):
-        self.temp_duckdb = f"duckdb:///{data_folder}/tmp/temp.db"
+        self.temp_duckdb = f"duckdb:///{data_folder}/tmp/temp_duckdb.db"
         self.clusterdb_postgres = 'postgresql+psycopg2://postgres:andrea@localhost:5433/clusterdb'
         self.table_names = self.TableName()
 
 
 class ParameterManager:
     def __init__(self):
-        self.years = [1850, 1860]
+        self.years = [1850, 1860, 1870, 1880, 1900, 1910, 1920, 1930, 1940]
         self.dbscan_eps = 100
         self.dbscan_min_points = 1
         self.pixel_threshold = 100
@@ -86,7 +86,7 @@ class Config:
         self.path = PathManager(project_path=project_path, data_folder=data_folder, docker_data_folder=docker_data_folder)
         self.db = DatabaseInfoManager(data_folder=data_folder)
         self.param = ParameterManager()
-        self.log_level = 'DEBUG'
+        self.debug = True
 
 
 config = Config()

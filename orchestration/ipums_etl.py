@@ -1,11 +1,19 @@
 import pandas as pd
 import sqlalchemy
-from src.python.utils import run_sql_script_on_db, DB, get_db_engine
+from src.python.utils import run_sql_script_on_db, DB, get_db_engine, logger
 from config import config
+
+
+def configure_duckdb():
+    e = get_db_engine(db=DB.TEMP_DUCKDB)
+    with e.begin() as conn:
+        conn.execute(sqlalchemy.text("SET max_memory='40GB';"))
+        conn.execute(sqlalchemy.text("SET enable_progress_bar = false;"))
 
 
 def extract_data_to_duckdb():
     for y in config.param.years:
+        logger.debug(f"Extracting data for year {y}")
         _extract_data_to_duckdb(y)
 
 
@@ -23,6 +31,7 @@ def _extract_data_to_duckdb(y: int):
 
 def transform_data():
     for y in config.param.years:
+        logger.debug(f"Transforming data for year {y}")
         _transform_data(y)
 
 

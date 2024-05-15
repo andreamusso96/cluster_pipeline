@@ -8,14 +8,14 @@ from config import config
 
 
 logger = logging.getLogger('cluster_pipeline')
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.DEBUG if config.debug else logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch = logging.StreamHandler()
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-engine_temp_duckdb = create_engine(config.db.temp_duckdb, echo=True)
-engine_clusterdb_postgres = create_engine(config.db.clusterdb_postgres, echo=True)
+engine_temp_duckdb = create_engine(config.db.temp_duckdb, echo=True if config.debug else False)
+engine_clusterdb_postgres = create_engine(config.db.clusterdb_postgres, echo=True if config.debug else False)
 
 
 class DB(Enum):
