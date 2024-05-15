@@ -22,7 +22,7 @@ WITH multiyear_cluster_industry_with_uid AS (
     FROM "{{ params.crosswalk_cluster_uid_to_cluster_id_table }}" m JOIN "{{ params.multiyear_cluster_industry_table }}" ci
     ON m.cluster_id = ci.cluster_id AND m.year = ci.year
 )
-SELECT cluster_uid, year, ind1950, SUM(worker_count) AS population
+SELECT cluster_uid, year, ind1950, SUM(worker_count) AS worker_count
 FROM multiyear_cluster_industry_with_uid
 GROUP BY cluster_uid, year, ind1950
 ORDER BY cluster_uid, year, ind1950;
