@@ -1,6 +1,6 @@
 from typing import Dict
 from enum import Enum
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine, text, MetaData, Table
 import functools
 import jinja2
 import logging
@@ -16,6 +16,7 @@ logger.addHandler(ch)
 
 engine_temp_duckdb = create_engine(config.db.temp_duckdb, echo=True if config.debug else False)
 engine_clusterdb_postgres = create_engine(config.db.clusterdb_postgres, echo=True if config.debug else False)
+metadata_clusterdb_postgres = MetaData()
 
 
 class DB(Enum):
@@ -45,6 +46,10 @@ def get_db_engine(db: DB):
         return engine_clusterdb_postgres
     else:
         raise ValueError(f"Database {db.value} not supported")
+
+
+def get_clusterdb_postgres_table(name: str):
+    return Table(name, metadata_clusterdb_postgres, autoload_with=engine_clusterdb_postgres)
 
 
 def execute_sql_file(conn, file_path: str, params: Dict[str, str] = None):
