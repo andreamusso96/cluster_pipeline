@@ -12,9 +12,9 @@ def create_multiyear_tables_and_cluster_intersection_matching():
                             column_names=['cluster_id', 'population', 'geom'], create_spatial_index=True)
     _create_cluster_intersection_matching()
 
-    _create_multiyear_table(base_table_name=config.db.table_names.cluster_industry,
-                            multiyear_table_name=config.db.table_names.multiyear_cluster_industry,
-                            column_names=['cluster_id', 'ind1950', 'worker_count'], create_spatial_index=False)
+    _create_multiyear_table(base_table_name=config.db.table_names.census_place_industry_count,
+                            multiyear_table_name=config.db.table_names.multiyear_census_place_industry_count,
+                            column_names=['census_place_id', 'ind1950', 'worker_count'], create_spatial_index=False)
 
 
 def _create_multiyear_table(base_table_name, multiyear_table_name, column_names, create_spatial_index: bool):
@@ -65,10 +65,12 @@ def create_time_consistent_cluster():
     sql_file_path = config.path.sql.ipums_tcc.create_time_consistent_cluster
     params = {
         'multiyear_cluster_table': config.db.table_names.multiyear_cluster,
-        'multiyear_cluster_industry_table': config.db.table_names.multiyear_cluster_industry,
+        'multiyear_census_place_industry_count_table': config.db.table_names.multiyear_census_place_industry_count,
         'crosswalk_cluster_uid_to_cluster_id_table': config.db.table_names.crosswalk_cluster_uid_to_cluster_id,
+        'census_place_table': config.db.table_names.census_place,
         'time_consistent_cluster_table': config.db.table_names.time_consistent_cluster,
         'time_consistent_cluster_industry_table': config.db.table_names.time_consistent_cluster_industry,
+        'time_consistent_cluster_geometry_table': config.db.table_names.time_consistent_cluster_geometry,
         'industry_table': config.db.table_names.industry_code,
     }
     return sql_file_path, params

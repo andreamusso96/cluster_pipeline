@@ -59,11 +59,12 @@ class DatabaseInfoManager:
             self.rasterized_census_places = "rasterized_census_places_{year}"
             self.convolved_census_place_raster = "convolved_census_place_raster_{year}"
             self.multiyear_cluster = "multiyear_cluster"
-            self.multiyear_cluster_industry = "multiyear_cluster_industry"
+            self.multiyear_census_place_industry_count = "multiyear_census_place_industry_count"
             self.cluster_intersection_matching = "cluster_intersection_matching"
             self.crosswalk_cluster_uid_to_cluster_id = "crosswalk_cluster_uid_to_cluster_id"
             self.time_consistent_cluster = "time_consistent_cluster"
             self.time_consistent_cluster_industry = "time_consistent_cluster_industry"
+            self.time_consistent_cluster_geometry = "time_consistent_cluster_geometry"
 
     def __init__(self, data_folder: str = _data_folder):
         self.temp_duckdb = f"duckdb:///{data_folder}/tmp/temp_duckdb.db"
