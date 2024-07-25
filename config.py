@@ -44,6 +44,7 @@ class PathManager:
                 self.sql_file_folder = sql_file_folder
                 self.create_cluster = f"{self.sql_file_folder}/create_cluster.sql"
                 self.create_time_consistent_cluster = f"{self.sql_file_folder}/create_time_consistent_cluster.sql"
+                self.create_time_consistent_cluster_geometry = f"{self.sql_file_folder}/create_time_consistent_cluster_geometry.sql"
                 self.country_geocoding = f"{self.sql_file_folder}/country_geocoding.sql"
 
         def __init__(self, sql_file_folder: str):
@@ -106,6 +107,7 @@ class DatabaseInfoManager:
             self.time_consistent_cluster_pre_geocoding = "time_consistent_cluster_pre_geocoding"
             self.time_consistent_cluster_geometry_pre_geocoding = "time_consistent_cluster_geometry_pre_geocoding"
             self.time_consistent_cluster = "time_consistent_cluster"
+            self.time_consistent_cluster_year = "time_consistent_cluster_{year}"
             self.time_consistent_cluster_geometry = "time_consistent_cluster_geometry"
 
     def __init__(self, data_folder: str = _data_folder):

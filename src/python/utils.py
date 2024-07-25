@@ -65,6 +65,11 @@ def get_postgres_table(name: str, db: DB):
 
 
 def execute_sql_file(conn, file_path: str, params: Dict[str, str] = None):
+    sql = read_sql_file(file_path, params)
+    conn.execute(text(sql))
+
+
+def read_sql_file(file_path: str, params: Dict[str, str] = None):
     with open(file_path) as f:
         sql = f.read()
 
@@ -73,7 +78,7 @@ def execute_sql_file(conn, file_path: str, params: Dict[str, str] = None):
 
     template = jinja2.Template(sql)
     sql = template.render(params=params)
-    conn.execute(text(sql))
+    return sql
 
 
 def execute_bash_script(file_path: str, args: List[str]):

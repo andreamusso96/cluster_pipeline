@@ -1,6 +1,5 @@
 from sqlalchemy import text
-from src.python.utils import execute_bash_script, run_sql_script_on_db, DB, get_db_engine
-from src.python.multi_year_matching import get_cluster_year_connected_component_table
+from src.python.utils import execute_bash_script, run_sql_script_on_db, DB, get_db_engine, execute_sql_file
 from common import create_multiyear_table as _create_multiyear_table, create_crosswalk_cluster_uid_to_cluster_id as _create_crosswalk_cluster_uid_to_cluster_id, create_cluster_intersection_matching as _create_cluster_intersection_matching
 from config import config
 
@@ -56,15 +55,33 @@ def create_crosswalk_cluster_uid_to_cluster_id() -> None:
 
 
 @run_sql_script_on_db(db=DB.GHSL_POSTGRES)
-def create_time_consistent_cluster_pre_geocoding():
-    sql_file_path = config.path.sql.ghsl_tcc.create_time_consistent_cluster
+def create_time_consistent_cluster_geometry_pre_geocoding():
+    sql_file_path = config.path.sql.ghsl_tcc.create_time_consistent_cluster_geometry
     params = {
         'multiyear_cluster_table': config.db.ghsl_table.multiyear_cluster,
         'crosswalk_cluster_uid_to_cluster_id_table': config.db.ghsl_table.crosswalk_cluster_uid_to_cluster_id,
-        'time_consistent_cluster_pre_geocoding_table': config.db.ghsl_table.time_consistent_cluster_pre_geocoding,
         'time_consistent_cluster_geometry_pre_geocoding_table': config.db.ghsl_table.time_consistent_cluster_geometry_pre_geocoding
     }
     return sql_file_path, params
+
+
+def create_time_consistent_cluster_pre_geocoding():
+    e = get_db_engine(db=DB.GHSL_POSTGRES)
+    with e.begin() as conn:
+        for year in config.param.ghsl.years:
+            params = {
+                'time_consistent_cluster_year': config.db.ghsl_table.time_consistent_cluster_year.format(year=year),
+                'time_consistent_cluster_geometry_pre_geocoding_table': config.db.ghsl_table.time_consistent_cluster_geometry_pre_geocoding,
+                'pop_table': config.db.ghsl_table.pop.format(year=year)
+            }
+            execute_sql_file(conn=conn, file_path=config.path.sql.ghsl_tcc.create_time_consistent_cluster, params=params)
+
+    _create_multiyear_table(base_table_name=config.db.ghsl_table.time_consistent_cluster_year,
+                            multiyear_cluster_table_name=config.db.ghsl_table.time_consistent_cluster_pre_geocoding,
+                            column_names=['cluster_uid', 'population'],
+                            years=config.param.ghsl.years,
+                            create_spatial_index=False,
+                            db=DB.GHSL_POSTGRES)
 
 
 def load_country_borders():
